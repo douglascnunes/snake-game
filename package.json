@@ -1,0 +1,11 @@
+{
+  "name": "snakegame",
+  "version": "1.0.0",
+  "description": "Its is a simples code based in a famous game called SnakeGame.",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Douglas Nunes",
+  "license": "ISC"
+}
