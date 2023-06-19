@@ -4,149 +4,172 @@ const actButton = document.getElementById('act');
 
 class Snake {
 
-    constructor(x, y, food) {
-        this.headX = x;
-        this.headY = y;
-        this.command = 'ArrowRight';
-        this.commandLastMov = '';
-        this.body = [];
+    constructor() {
+        this.headX;                     // Posição X da cabeça.
+        this.headY;                     // Posição Y da cabeça.
+        this.command = 'ArrowRight';    // Comando do movimento.
+        this.lastCommand = '';          // Último comando realizado.
+        this.body = [];                 // Posições das unidades do corpo da cobrinha.
+        this.food = new Food();         // Referência para a instância Food.
+        this.canGrowth = false;         // Informa se a cobrinha pode ou não crescer.
+        this.isGaming = false;          // Informa se a cobrinha está em uma partida.
+        this.interval;                  // Objeto que controla o intervalo do move().
+        this.speed = 150;               // Velocidade da cobrinha (em míliseguindos),
         document.addEventListener('keydown', this.commander.bind(this));
-        this.food = food;
-        this.start();
+        this.newGame();                 // Construir um novo jogo.
     }
     
-    start() {
-        this.create(this.headX, this.headY);
-    }
     
     create(x, y) {
-        const unit = document.createElement('div');
-        unit.classList.add('snakeUnit');
-        const location = game.getElementsByClassName(`x${x} y${y}`);
-        location[0].appendChild(unit);
+        const location = game.querySelector(`.x${x}.y${y}`);
+        location.innerHTML = '<div class="snakeUnit"></div>';
         this.body.push([x,y]);
     }
     
     delete(x, y) {
-        const location = game.getElementsByClassName(`x${x} y${y}`);
-        const snakeUnit = location[0].children[0];
-        if(snakeUnit != null) {
+        const location = game.querySelector(`.x${x}.y${y}`);
+        const snakeUnit = location.children[0];
+        if(snakeUnit) {
             snakeUnit.remove();
             this.body.shift();
         }
     }
     
-    reset() {
-        const allSnakeUnits = document.getElementsByClassName('snakeUnit');
-        for(let snakeUnit of allSnakeUnits) {
-            snakeUnit.remove();
-        }
-        this.body = [];
-        this.food.initScore();
-        this.food.delete();
+    newGame() {
+        clearInterval(this.interval);
         this.headX = 3;
         this.headY = 7;
-        this.start();
         this.command = "ArrowRight";
-        this.commandLastMov = '';
+        this.lastCommand = '';
+        this.body = [];
+        this.canGrowth = false;
+        this.isGaming = false;
+        const spaces = document.getElementsByClassName('space');
+        for(let space of spaces) {
+            space.innerHTML = '';
+        }
+        this.create(this.headX, this.headY);
+        this.food.init();
     }
 
-    checkMove(x, y, interval, growth) {
-        console.log("x:"+x+"\ny:"+y)
+    checkMove(x, y) {
+        // Se a cobrinha encostar na parede, então o jogo acaba.
         if(x < 0 || x >= 15 || y < 0 || y >= 15) {
-            clearInterval(interval);
             console.log("Game Over.");
-            this.reset();
+            this.newGame();
+            this.canGrowth = false;
             return;
         }
-        const location = game.getElementsByClassName(`x${x} y${y}`);
-        if(location[0].children.length === 0) {
-            console.log("oi")
+        // Selecinar o local onde a cobrinha quer andar.
+        const location = game.querySelector(`.x${x}.y${y}`);
+        // Se o local onde a cobrinha avançar for vazio, então ela só anda.
+        if(location.children.length === 0) {
+            this.canGrowth = false;
             return;
         }
-        else {
+        // Se location tem comida, então a comida soma, reaparece e a cobrinha cresce.
+        if(location.children[0].classList.contains('foodUnit')) {
             this.food.eating();
-            return true;
+            this.canGrowth = true;
+            return;
+        }
+        // Se location tem o corpo da cobrinha, então o jogo acaba.
+        if(location.children[0].classList.contains('snakeUnit')) {
+            console.log("Game Over.");
+            this.newGame();
+            this.canGrowth = false;
+            return;
         }
     }
 
     move() {
-        let interval = setInterval(() => {
-            let growth = false;
-            if(this.command === 'ArrowUp') {
-                growth = this.checkMove(this.headX, this.headY - 1, interval, growth);
-                this.headY -= 1;
+        const commandFunctions = {
+            'ArrowUp': () => this.moveUp(),
+            'ArrowRight': () => this.moveRight(),
+            'ArrowDown': () => this.moveDown(),
+            'ArrowLeft': () => this.moveLeft()
+        };
+
+        this.interval = setInterval(() => {
+            const moveFunction = commandFunctions[this.command];
+            if (moveFunction) {
+                moveFunction();
+                this.lastCommand = this.command;
+                
+                if (!this.canGrowth) {
+                    this.delete(this.body[0][0], this.body[0][1]);
+                }
+                this.create(this.headX, this.headY);
             }
-            else if(this.command === 'ArrowRight') {
-                growth = this.checkMove(this.headX + 1, this.headY, interval, growth);
-                this.headX += 1;
-            }
-            else if(this.command === 'ArrowDown') {
-                growth = this.checkMove(this.headX, this.headY + 1, interval, growth);
-                this.headY += 1;
-            }
-            else {
-                growth = this.checkMove(this.headX - 1, this.headY, interval, growth);
-                this.headX -= 1;
-            }
-            this.commandLastMov = this.command;
-            this.create(this.headX, this.headY);
-            if(growth === false) {
-                this.delete(this.body[0][0],this.body[0][1],);
-            }
-        }
-        , 500);
+        }, this.speed);
     }
+
+    moveUp() {
+        this.checkMove(this.headX, this.headY - 1);
+        this.headY -= 1;
+    }
+    moveRight() {
+        this.checkMove(this.headX + 1, this.headY);
+        this.headX += 1;
+    }
+    moveDown() {
+        this.checkMove(this.headX, this.headY + 1);
+        this.headY += 1;
+    }
+    moveLeft() {
+        this.checkMove(this.headX - 1, this.headY);
+        this.headX -= 1;
+    }
+
 
     commander(event) {
-        const moveKeys = ['ArrowUp','ArrowRight','ArrowDown','ArrowLeft']
-        if(!(event.key ==='ArrowUp' && this.commandLastMov === 'ArrowDown') &&
-           !(event.key ==='ArrowDown' && this.commandLastMov === 'ArrowUp') &&
-           !(event.key ==='ArrowRight' && this.commandLastMov === 'ArrowLeft') &&
-           !(event.key ==='ArrowLeft' && this.commandLastMov === 'ArrowRight') ) {
-            for (let key of moveKeys) {
-                if(event.key === key) {
-                    this.command = key;
-                }
-            }  
+        const moveKeys = new Map([
+            ['ArrowUp', 'ArrowDown'],
+            ['ArrowRight', 'ArrowLeft'],
+            ['ArrowDown', 'ArrowUp'],
+            ['ArrowLeft', 'ArrowRight']
+        ]);
+    
+        const newCommand = moveKeys.get(event.key);
+    
+        if (!newCommand || newCommand !== this.lastCommand) {
+            this.command = event.key;
         }
     }
-
 }
 
 
 class Food {
-    constructor(snakeBody) {
+    constructor() {
         this.posX = 0;
         this.posY = 0;
         this.scorePoints = 0;
-        this.score = this.initScore();
+        this.score = document.getElementById('score');
     }
 
-    initScore() {
-        const score = document.getElementById('score');
-        score.innerHTML = '0';
-        return score;
+    init() {
+        this.score.textContent = '0';
+        this.delete();
+        this.create();
     }
 
     create() {
+        const getRandomPosition = () => parseInt(Math.floor(Math.random() * 15));
         let accept = false;
         while(accept === false) {
-            this.posX = parseInt(Math.floor(Math.random() * 15))
-            this.posY = parseInt(Math.floor(Math.random() * 15))
-            const location = game.getElementsByClassName(`x${this.posX} y${this.posY}`);
-            if(location[0].children.length === 0) {
-                const food = document.createElement('div');
-                food.classList.add('foodUnit');
-                location[0].appendChild(food);
+            this.posX = getRandomPosition();
+            this.posY = getRandomPosition();
+            const location = game.querySelector(`.x${this.posX}.y${this.posY}`);
+            if(location.children.length === 0) {
+                location.innerHTML = '<div class="foodUnit"></div>';
                 accept = true;
             }
         } 
     }
 
     delete() {
-        const location = game.getElementsByClassName(`x${this.posX} y${this.posY}`);
-        const foodUnit = location[0].children[0];
+        const location = game.querySelector(`.x${this.posX}.y${this.posY}`);
+        const foodUnit = location.children[0];
         if(foodUnit != null) {
             foodUnit.remove();
         }
@@ -174,16 +197,16 @@ const buildTable = () => {
 }
 
 const startGame = () => {
-    const actb = actButton.addEventListener('click', () => {
-        console.log("Go!")
-        snake.move();
-        food.create();
+    document.addEventListener('keydown', (event) => {
+        const startKey = ['ArrowUp', 'ArrowDown','ArrowRight', 'ArrowLeft'];
+        if(startKey.includes(event.key) && snake.isGaming === false) {
+            snake.isGaming = true;
+            snake.move();
+        }
     })
     
     buildTable();
-    let food = new Food();
-    let snake = new Snake(3, 7, food);
+    let snake = new Snake();
 }
-
 
 startGame();
