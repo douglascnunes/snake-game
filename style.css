@@ -34,6 +34,22 @@ header {
     background-color: hsl(130, 60%, 15%);
 }
 
+#scoreSpace, #recordSpace {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+#score, #record {
+    font-size: 50px;
+    color: white;
+}
+
+#scoreIcon, #recordIcon {
+    font-size: 40px;
+}
+
 #game {
     display: grid;
     grid-template-columns: repeat(15, 40px);
@@ -47,31 +63,67 @@ header {
     align-items: center;
     height: 40px;
     width: 40px;
-    background-color: hsl(130, 40%, 50%);
+    background-color: hsl(130, 40%, 49%);
     position: relative;
 }
 
 #game .space:nth-child(odd) {
     height: 40px;
     width: 40px;
-    background-color: hsl(130, 45%, 45%);
+    background-color: hsl(130, 45%, 46%);
 }
 
 .snakeUnit {
-    height: 30px;
-    width: 30px;
+    height: 20px;
+    width: 20px;
     border-radius: 5px;
-    background: blue;
+    border: solid hsl(210, 100%, 20%) 5px;
+    background: hsl(210, 80%, 40%);
 }
 
 .foodUnit {
-    height: 30px;
-    width: 30px;
-    border-radius: 5px;
-    background: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
 }
 
-#score {
-    font-size: 50px;
-    color: white;
+#hint {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background-color: hsl(0,0%,10%, 50%);
+    border-radius: 10px;
+    animation: blink 2s ease-in-out infinite;
+}
+
+#hint img {
+    width: 120px;
+    height: 120px;
+}
+
+#hint p {
+    margin-top: 10px;
+    font-size: 20px;
+    font-weight: 700;
+    color: hsl(0,0%,10%);
+    text-align: center;
+}
+
+@keyframes blink {
+    0% {
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.6;
+    }
 }

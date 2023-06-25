@@ -1,5 +1,5 @@
 const game = document.getElementById('game');
-const actButton = document.getElementById('act');
+const hint = document.getElementById('hint');
 
 
 class Snake {
@@ -15,6 +15,13 @@ class Snake {
         this.isGaming = false;          // Informa se a cobrinha está em uma partida.
         this.interval;                  // Objeto que controla o intervalo do move().
         this.speed = 150;               // Velocidade da cobrinha (em míliseguindos),
+        this.scorePoints = 0;           // Pontos ganhos ao comer comidas (:3).
+        this.scoreRecord = 0;           // Pontuação máximma.
+        this.scoreSpan = document.getElementById('score');
+        this.recordSpan = document.getElementById('record');
+        this.scoreSpan.textContent = '0';
+        this.recordSpan.textContent = '0';
+        
         document.addEventListener('keydown', this.commander.bind(this));
         this.newGame();                 // Construir um novo jogo.
     }
@@ -44,18 +51,29 @@ class Snake {
         this.body = [];
         this.canGrowth = false;
         this.isGaming = false;
+        this.scoreNewGame();
         const spaces = document.getElementsByClassName('space');
         for(let space of spaces) {
             space.innerHTML = '';
         }
         this.create(this.headX, this.headY);
         this.food.init();
+        hint.style.display = '';
+    }
+
+    scoreNewGame() {
+        if(this.scorePoints > this.scoreRecord)
+        {
+            this.scoreRecord = this.scorePoints;
+            this.recordSpan.innerText = this.scoreRecord;
+        }
+        this.scorePoints = 0;
+        this.scoreSpan.textContent = '0';
     }
 
     checkMove(x, y) {
         // Se a cobrinha encostar na parede, então o jogo acaba.
         if(x < 0 || x >= 15 || y < 0 || y >= 15) {
-            console.log("Game Over.");
             this.newGame();
             this.canGrowth = false;
             return;
@@ -70,12 +88,13 @@ class Snake {
         // Se location tem comida, então a comida soma, reaparece e a cobrinha cresce.
         if(location.children[0].classList.contains('foodUnit')) {
             this.food.eating();
+            this.scorePoints++;
+            this.scoreSpan.innerText = this.scorePoints;
             this.canGrowth = true;
             return;
         }
         // Se location tem o corpo da cobrinha, então o jogo acaba.
         if(location.children[0].classList.contains('snakeUnit')) {
-            console.log("Game Over.");
             this.newGame();
             this.canGrowth = false;
             return;
@@ -143,25 +162,25 @@ class Food {
     constructor() {
         this.posX = 0;
         this.posY = 0;
-        this.scorePoints = 0;
-        this.score = document.getElementById('score');
     }
 
     init() {
-        this.score.textContent = '0';
         this.delete();
         this.create();
     }
 
     create() {
         const getRandomPosition = () => parseInt(Math.floor(Math.random() * 15));
+        const getRandomFood = () => parseInt(Math.floor(Math.random() * 8));
+        const foodListIcon = ['🍎','🥭', '🧀', '🥩','🍙', '🍔','🍺', '🥦','💵'];
         let accept = false;
         while(accept === false) {
             this.posX = getRandomPosition();
             this.posY = getRandomPosition();
+            const foodChoice = getRandomFood();
             const location = game.querySelector(`.x${this.posX}.y${this.posY}`);
             if(location.children.length === 0) {
-                location.innerHTML = '<div class="foodUnit"></div>';
+                location.innerHTML = `<span class="foodUnit">${foodListIcon[foodChoice]}</span>`;
                 accept = true;
             }
         } 
@@ -178,8 +197,6 @@ class Food {
     eating() {
         this.delete();
         this.create();
-        this.scorePoints++;
-        this.score.innerText = this.scorePoints;
     }
 }
 
@@ -201,6 +218,7 @@ const startGame = () => {
         const startKey = ['ArrowUp', 'ArrowDown','ArrowRight', 'ArrowLeft'];
         if(startKey.includes(event.key) && snake.isGaming === false) {
             snake.isGaming = true;
+            hint.style.display = 'none';
             snake.move();
         }
     })

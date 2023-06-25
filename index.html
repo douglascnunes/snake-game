@@ -13,10 +13,20 @@
 <body>
     <div class="container">
         <header>
-            <span id="score"></span>
-            <button id="act">Action</button>
+            <div id="scoreSpace">
+                <span id="scoreIcon">🍎</span>
+                <span id="score"></span>
+            </div>
+            <div id="recordSpace">
+                <span id="recordIcon">🏆</span>
+                <span id="record"></span>
+            </div>
         </header>
         <div id="game"></div>
+        <div id="hint">
+            <img src="./assets/arrowKeys.png" alt="Arrow Keys">
+            <p>Pressione uma seta para jogar</p>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
