@@ -1,16 +1,26 @@
 # Snake Game
-O jogo da cobrinha é muito famoso e todos conhecem suas regras. É um jogo simples e o objetivo principal é coletar as comidas para fazer a cobra crescer, porém deve ter cuidado para não encostar nas bordas do tabuleiro e nem no próprio corpo da cobra.
+O jogo da cobrinha é game antigo e muito famoso . É um jogo bem simples e seu único o objetivo é coletar as comidas que aparecem no tabuleiro para fazer a cobra crescer. Porém se a cobrinha encostar na parede ou nela mesma, o jogo acaba.
 
-### Lista de desenvolvimento:
- - [x] Criar o tabuleiro.
- - [x] Criar a cobrinha.
- - [x] Criar a comida.
- - [x] Criar o placar.
- - [x] Função de resetar a partida.
- - [ ] Cobrinha crescer ao comer.
- - [ ] Perder o jogo quando a cobrinha encostar no seu próprio corpo.
- - [ ] Imagens, Interface e Animações.
- - [ ] PopUp Menu para inicar partida ou aviso de fim de jogo (derrota).
- - [ ] Polir o código.
- - [ ] Melhorar o README.md.
- - [ ] Acrescentar uma nova funcionabilidade no jogo (ex.: escolha de velocidade).
+<p align="center">
+<img src="https://github.com/douglascnunes/snake-game/assets/107591943/22f6abd0-e63b-4034-8cbb-12efa0464a36" >
+</p>
+
+### O que está presente no jogo?
+ - __Comer e crescer 🍎:__ sempre que a cobrinha comer uma comida que está no tabuleiro, ela crescer. Então uma nova comida aparecerá aleatóriamente no tabuleiro em um espaço onde o corpo da cobrinha não estar.
+ - __Morte 😵:__ se a cobrinha encostar na parede ou nela mesma, é GameOver!
+ - __Pausar o jogo ⛔️:__ para pausar o o jogo, basta aperta qualquer botão do teclado que não seja as setinhas.
+ - __Record! 🏆:__ quando a cobrinha morrer, a sua pontuação será gravada no placar até que uma pontuação maior seja realizada.
+ - __Estilo 😎:__ o jogo utiliza dos emojis e do CSS para deixar tudo mais estiloso.
+
+
+### Porque criei esse jogo?
+Elaborei um planejamento com várias etapas para começar a aprender HTML, CSS e JavaScript, e no final desse planejamento é a criação do joguinho da cobrinha 🐍.
+
+📄 Visite o Pages desse repositório ou click [Aqui](https://douglascnunes.github.io/snake-game/) para começar a Jogar!
+
+
+### Bugs conhecidos.
+ - Em raros momentos a comida não reaparece após a cobrinha comer.
+
+
+
