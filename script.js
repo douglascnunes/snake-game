@@ -1,6 +1,7 @@
 const game = document.getElementById('game');
 const hint = document.getElementById('hint');
-
+const hintText = document.getElementById('hintText');
+const newRecord = document.getElementById('newRecord');
 
 class Snake {
 
@@ -29,10 +30,26 @@ class Snake {
     
     create(x, y) {
         const location = game.querySelector(`.x${x}.y${y}`);
-        location.innerHTML = '<div class="snakeUnit"></div>';
+        location.innerHTML = `<div class="snakeUnit"</div>`;
         this.body.push([x,y]);
+        this.updateColor();
     }
     
+    updateColor() {
+        for(let unit of this.body) {
+            const hue = (this.body.indexOf(unit) * 10) % 360;
+            const location = game.querySelector(`.x${unit[0]}.y${unit[1]}`);
+            location.children[0].innerHTML = `
+            <div class="snakeUnit" style="
+            height: 20px;
+            width: 20px;
+            border-radius: 5px;
+            border: solid hsl(0, 0%, 20%) 5px;
+            background-color: hsl(${hue}, 50%, 50%)
+            "></div>`;
+        }
+    }
+
     delete(x, y) {
         const location = game.querySelector(`.x${x}.y${y}`);
         const snakeUnit = location.children[0];
@@ -59,6 +76,7 @@ class Snake {
         this.create(this.headX, this.headY);
         this.food.init();
         hint.style.display = '';
+        hintText.innerText = '🐍 Novo Jogo 🐍\n\nPressiona uma tecla para começar'
     }
 
     scoreNewGame() {
@@ -66,6 +84,7 @@ class Snake {
         {
             this.scoreRecord = this.scorePoints;
             this.recordSpan.innerText = this.scoreRecord;
+            newRecord.style.display = '';
         }
         this.scorePoints = 0;
         this.scoreSpan.textContent = '0';
@@ -219,12 +238,24 @@ const startGame = () => {
         if(startKey.includes(event.key) && snake.isGaming === false) {
             snake.isGaming = true;
             hint.style.display = 'none';
+            newRecord.style.display = 'none';
             snake.move();
+        }
+        else {
+            hint.style.display = 'none';
+        }
+    })
+    document.addEventListener('keydown', (event) => {
+        const startKey = ['ArrowUp', 'ArrowDown','ArrowRight', 'ArrowLeft'];
+        if(!startKey.includes(event.key)) {
+            hint.style.display = '';
+            hintText.innerText = '⛔️ Jogo Pausado ⛔️\n\nPressiona uma seta para continuar'
         }
     })
     
     buildTable();
     let snake = new Snake();
+    newRecord.style.display = 'none';
 }
 
 startGame();

@@ -13,19 +13,22 @@
 <body>
     <div class="container">
         <header>
-            <div id="scoreSpace">
-                <span id="scoreIcon">🍎</span>
-                <span id="score"></span>
+            <div id="scoreBoard">
+                <div id="scoreSpace">
+                    <span id="scoreIcon">🍎</span>
+                    <span id="score"></span>
+                </div>
+                <div id="recordSpace">
+                    <span id="recordIcon">🏆</span>
+                    <span id="record"></span>
+                </div>
             </div>
-            <div id="recordSpace">
-                <span id="recordIcon">🏆</span>
-                <span id="record"></span>
-            </div>
+            <span id="newRecord">👑 NEW RECORD 👑</span>
         </header>
         <div id="game"></div>
         <div id="hint">
             <img src="./assets/arrowKeys.png" alt="Arrow Keys">
-            <p>Pressione uma seta para jogar</p>
+            <p id="hintText"></p>
         </div>
     </div>
     <script src="script.js"></script>

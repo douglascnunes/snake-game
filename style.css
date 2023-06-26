@@ -10,7 +10,7 @@ body {
     align-items: center;
     height: 100vh;
     width: 100vw;
-    background: hsl(130, 50%, 50%);
+    background: linear-gradient(hsl(130, 35%, 50%), hsl(180, 45%, 50%)) ;
 }
 
 .container {
@@ -19,20 +19,45 @@ body {
     align-items: center;
     height: 750px;
     width: 600px;
-    border: solid 10px hsl(130, 70%, 10%);
+    border: solid 20px hsl(130, 60%, 15%);
     border-radius: 15px;
     background-color: hsl(130, 60%, 25%);
+    box-shadow: 0px 0px 10px  hsl(0, 0%,10%);
 }
 
 header {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    gap: 50px;
     height: 150px;
     width: 600px;
     background-color: hsl(130, 60%, 15%);
 }
+
+#scoreBoard {
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    gap: 50px;
+    height: 100px;
+    width: 600px;
+    background-color: hsl(130, 60%, 15%);
+}
+
+@keyframes blinking {
+    0% { color: hsl(0, 0%, 90%); }
+    20% { color: hsl(50, 100%, 50%); }
+    40% { color: hsl(0, 0%, 90%); }
+    60% { color: hsl(0, 100%, 50%); }
+    80% { color: hsl(0, 0%, 90%); }
+    100% { color: hsl(210, 100%, 50%); }
+  }
+  
+  #newRecord {
+    animation: blinking 0.4s infinite;
+    font-size: 20px;
+    padding: 10px;
+  }
 
 #scoreSpace, #recordSpace {
     display: flex;
@@ -73,19 +98,34 @@ header {
     background-color: hsl(130, 45%, 46%);
 }
 
+/*
 .snakeUnit {
     height: 20px;
     width: 20px;
     border-radius: 5px;
-    border: solid hsl(210, 100%, 20%) 5px;
-    background: hsl(210, 80%, 40%);
+    border: solid hsl(210, 80%, 40%) 5px;
+    background: hsl(210, 100%, 35%);
 }
+*/
 
 .foodUnit {
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 30px;
+    animation: foodBlink 1s ease-in-out infinite;
+}
+
+@keyframes foodBlink {
+    0% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.5;
+    }
 }
 
 #hint {
@@ -98,21 +138,21 @@ header {
     left: 50%;
     transform: translate(-50%, -50%);
     padding: 20px;
-    background-color: hsl(0,0%,10%, 50%);
+    background-color: hsl(0,0%,10%, 60%);
     border-radius: 10px;
     animation: blink 2s ease-in-out infinite;
 }
 
 #hint img {
-    width: 120px;
+    width: 175px;
     height: 120px;
 }
 
 #hint p {
     margin-top: 10px;
     font-size: 20px;
-    font-weight: 700;
-    color: hsl(0,0%,10%);
+    font-weight: 500;
+    color: hsl(0,0%,80%);
     text-align: center;
 }
 
@@ -127,3 +167,4 @@ header {
         opacity: 0.6;
     }
 }
+
